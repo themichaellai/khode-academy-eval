@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'json'
+require 'shellwords'
 
 def test_text(user_code, klass_name, cases)
   puts "cases", cases
@@ -25,5 +26,6 @@ end
 
 post '/' do
   body = JSON.parse(request.body.read)
-  test_text(body["user_code"], body["class_name"], body["cases"])
+  test_program = test_text(body["user_code"], body["class_name"], body["cases"])
+  `ruby -e #{Shellwords.escape(test_program)}`
 end
